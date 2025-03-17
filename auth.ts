@@ -1,3 +1,4 @@
+// lib/auth.ts
 import { compareSync } from "bcrypt-ts-edge";
 import type { NextAuthConfig } from "next-auth";
 import NextAuth from "next-auth";
@@ -13,7 +14,7 @@ export const config = {
   },
   session: {
     strategy: "jwt",
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -56,9 +57,7 @@ export const config = {
   ],
   callbacks: {
     async session({ session, user, trigger, token }: any) {
-      // Set the user id on the session
       session.user.id = token.sub;
-      // If there is an update, set the name on the session
       if (trigger === "update") {
         session.user.name = user.name;
       }
